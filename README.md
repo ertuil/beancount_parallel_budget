@@ -86,36 +86,36 @@ bean-query data/main.beancount "SELECT date, account, position WHERE account ~ '
 
 ## 示例
 
-### 月度生活预算
+### 月度预算
 
 ```beancount
-2026-01-01 custom "parallel_budget" "Life" "monthly" 9600 CNY
+2026-01-01 custom "parallel_budget" "Food" "monthly" 2000 USD
 
-2026-01-03 * "永辉超市" "买菜"
-    Expenses:Life:Food                          320.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-03 * "Walmart" "Weekly groceries"
+    Expenses:Food:Grocery                          120.50 USD
+    Assets:CreditCard:Demo
 
-2026-01-10 * "滴滴出行" "打车"
-    Expenses:Traffic:Traffic                     45.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-05 * "Uber" "Airport pickup"
+    Expenses:Transport:Taxi                         45.00 USD
+    Assets:CreditCard:Demo
 ```
 
 插件自动为第一笔交易增加平行账脚注：
 
 ```beancount
-2026-01-03 * "永辉超市" "买菜"
-    Expenses:Life:Food                          320.00 CNY
-    Liabilities:Bank:BoC:CN
-    Equity:Budget:Expenses:Life                 320.00 CNY
-    Equity:Budget:Balance:Life                 -320.00 CNY
+2026-01-03 * "Walmart" "Weekly groceries"
+    Expenses:Food:Grocery                          120.50 USD
+    Assets:CreditCard:Demo
+    Equity:Budget:Expenses:Food                    120.50 USD
+    Equity:Budget:Balance:Food                    -120.50 USD
 ```
 
-第二笔走 `Traffic` 不在 `Life` 前缀内，**不会**标记。
+第二笔走 `Transport` 不在 `Food` 前缀内，**不会**标记。
 
 ### 一次性预算
 
 ```beancount
-2026-01-01 custom "parallel_budget" "Decoration" "once" 300000 CNY
+2026-01-01 custom "parallel_budget" "Renovation" "once" 20000 USD
 ```
 
 适用于装修、大件采购等一次性支出，只在预算起始日做一次调整。

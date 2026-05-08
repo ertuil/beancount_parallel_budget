@@ -1,87 +1,89 @@
 ; parallel_budget 示例账本
-; 使用: bean-report examples/main.beancount
+; 纯演示用途，所有账户和交易均为虚构
+; 使用: cd .. && PYTHONPATH=. bean-report examples/main.beancount
 
 plugin "parallel_budget"
 option "insert_pythonpath" "TRUE"
 
 * 账户定义
 
-2000-01-01 open Assets:Bank:BoC
-2000-01-01 open Assets:Web:WeChat:Cash
-2000-01-01 open Liabilities:Bank:BoC:CN
+2000-01-01 open Assets:Bank:Demo:Checking
+2000-01-01 open Assets:CreditCard:Demo
 2000-01-01 open Equity:Opening-Balances
-2000-01-01 open Income:Salary:USTC
-2000-01-01 open Expenses:Life:Food
-2000-01-01 open Expenses:Life:Rent
-2000-01-01 open Expenses:Life:Fee:Electricity
-2000-01-01 open Expenses:Life:Shop:Entertainment
-2000-01-01 open Expenses:Life:Traffic:Traffic
-2000-01-01 open Expenses:Life:Shop:Clothing
+2000-01-01 open Income:Salary:DemoCorp
+2000-01-01 open Expenses:Food:Grocery
+2000-01-01 open Expenses:Housing:Rent
+2000-01-01 open Expenses:Utilities:Electricity
+2000-01-01 open Expenses:Transport:Taxi
+2000-01-01 open Expenses:Entertainment:Movies
+2000-01-01 open Expenses:Shopping:Clothing
+2000-01-01 open Expenses:Renovation:Materials
+2000-01-01 open Expenses:Renovation:Labor
 
 * 预算定义
 
-2026-01-01 custom "parallel_budget" "Life"       "monthly" 9600  CNY
-2026-01-01 custom "parallel_budget" "Decoration" "once"    300000 CNY
+2026-01-01 custom "parallel_budget" "Food"        "monthly" 2000  USD
+2026-01-01 custom "parallel_budget" "Renovation"  "once"    20000 USD
 
 * 初始资金
 
 2026-01-01 * "Initial" "Opening Balance"
-    Assets:Bank:BoC                           500000.00 CNY
-    Assets:Web:WeChat:Cash                      10000.00 CNY
-    Equity:Opening-Balances                  -510000.00 CNY
+    Assets:Bank:Demo:Checking                    25000.00 USD
+    Assets:CreditCard:Demo                        5000.00 USD
+    Equity:Opening-Balances                     -30000.00 USD
 
 * 日常支出 (Jan)
 
-2026-01-03 * "永辉超市" "买菜"
-    Expenses:Life:Food                            320.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-03 * "Walmart" "Weekly groceries"
+    Expenses:Food:Grocery                           120.50 USD
+    Assets:CreditCard:Demo
 
-2026-01-05 * "滴滴出行" "打车上班"
-    Expenses:Life:Traffic:Traffic                  45.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-05 * "Uber" "Airport pickup"
+    Expenses:Transport:Taxi                          45.00 USD
+    Assets:CreditCard:Demo
 
-2026-01-08 * "美团外卖" "午餐"
-    Expenses:Life:Food                             52.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-08 * "DoorDash" "Lunch delivery"
+    Expenses:Food:Grocery                            32.00 USD
+    Assets:CreditCard:Demo
 
-2026-01-10 * "红星美凯龙" "浴室柜"
-    Expenses:Decoration                            4870.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-10 * "Home Depot" "Bathroom vanity"
+    Expenses:Renovation:Materials                   780.00 USD
+    Assets:Bank:Demo:Checking
 
-2026-01-12 * "国家电网" "电费"
-    Expenses:Life:Fee:Electricity                  180.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-12 * "City Power Co" "Electric bill"
+    Expenses:Utilities:Electricity                  120.00 USD
+    Assets:Bank:Demo:Checking
 
-2026-01-15 * "房东" "1月房租"
-    Expenses:Life:Rent                            3000.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-15 * "Landlord" "January rent"
+    Expenses:Housing:Rent                          1500.00 USD
+    Assets:Bank:Demo:Checking
 
-2026-01-20 * "优衣库" "买衣服"
-    Expenses:Life:Shop:Clothing                    299.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-20 * "H&M" "Winter jacket"
+    Expenses:Shopping:Clothing                      129.00 USD
+    Assets:CreditCard:Demo
 
-2026-01-25 * "猫眼电影" "春节档电影票"
-    Expenses:Life:Shop:Entertainment                76.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-01-25 * "AMC Theaters" "Movie night"
+    Expenses:Entertainment:Movies                    24.00 USD
+    Assets:CreditCard:Demo
 
 * 日常支出 (Feb)
 
-2026-02-01 * "房东" "2月房租"
-    Expenses:Life:Rent                            3000.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-02-01 * "Costco" "Monthly bulk grocery"
+    Expenses:Food:Grocery                           235.00 USD
+    Assets:Bank:Demo:Checking
 
-2026-02-05 * "盒马鲜生" "食材采购"
-    Expenses:Life:Food                            235.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-02-05 * "Landlord" "February rent"
+    Expenses:Housing:Rent                          1500.00 USD
+    Assets:Bank:Demo:Checking
 
-2026-02-10 * "红星美凯龙" "马桶安装尾款"
-    Expenses:Decoration                            3500.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-02-10 * "Contractor" "Renovation labor phase 2"
+    Expenses:Renovation:Labor                      2500.00 USD
+    Assets:Bank:Demo:Checking
 
-2026-02-15 * "滴滴出行" "去高铁站"
-    Expenses:Life:Traffic:Traffic                   28.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-02-15 * "Lyft" "To airport"
+    Expenses:Transport:Taxi                          28.00 USD
+    Assets:CreditCard:Demo
 
-2026-02-20 * "美团外卖" "晚餐"
-    Expenses:Life:Food                             68.00 CNY
-    Liabilities:Bank:BoC:CN
+2026-02-20 * "Whole Foods" "Organic groceries"
+    Expenses:Food:Grocery                            78.00 USD
+    Assets:CreditCard:Demo
