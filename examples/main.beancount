@@ -2,8 +2,12 @@
 ; 纯演示用途，所有账户和交易均为虚构
 ; 使用: cd .. && PYTHONPATH=. bean-report examples/main.beancount
 
+; 需要从仓库根目录运行并设置 PYTHONPATH：
+;   cd ~/parallel_budget && PYTHONPATH=. bean-report examples/main.beancount
+; 或使用 Makefile：
+;   make -C examples run
+
 plugin "parallel_budget"
-option "insert_pythonpath" "TRUE"
 
 * 账户定义
 

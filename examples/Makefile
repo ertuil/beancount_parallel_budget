@@ -1,14 +1,16 @@
-.PHONY: run report clean
+PARENT_DIR := $(abspath ..)
+
+.PHONY: run report query clean
 
 run:
-	cd .. && PYTHONPATH=. bean-report examples/main.beancount
+	PYTHONPATH=$(PARENT_DIR) bean-report $(PARENT_DIR)/examples/main.beancount
 
 report:
-	cd .. && PYTHONPATH=. bean-query examples/main.beancount \
+	PYTHONPATH=$(PARENT_DIR) bean-query $(PARENT_DIR)/examples/main.beancount \
 	  "SELECT date, account, position WHERE account ~ 'Equity:Budget'"
 
 fava:
-	cd .. && PYTHONPATH=. fava examples/main.beancount
+	PYTHONPATH=$(PARENT_DIR) fava $(PARENT_DIR)/examples/main.beancount
 
 clean:
 	rm -f *.html *.csv
