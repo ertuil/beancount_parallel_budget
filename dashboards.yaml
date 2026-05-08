@@ -1,0 +1,107 @@
+# parallel_budget Fava Dashboard
+# 复制此文件到你的 Fava dashboards.yaml 中，
+# 或放在主账本同目录下通过 !include 引入。
+#
+# 用法:
+#   1. 将以下 panels 配置添加到 data/dashboards.yaml
+#   2. 在 Fava 中切换 Budget Dashboard 视图即可
+
+dashboards:
+  - name: "📊 预算看板"
+    panels:
+      # 面板 1: 预算余额总览
+      - title: "💰 预算余额"
+        width: full
+        sql: |
+          SELECT
+            account,                     -- 预算类别
+            sum(position) as balance     -- 当前余额
+          WHERE
+            account ~ 'Equity:Budget:Balance:'
+            AND account != 'Equity:Budget:Income:'
+          GROUP BY account
+          ORDER BY account
+
+      # 面板 2: 实际支出
+      - title: "📉 预算内实际支出"
+        width: half
+        sql: |
+          SELECT
+            account,
+            sum(position) as expense
+          WHERE
+            account ~ 'Equity:Budget:Expenses:'
+          GROUP BY account
+          ORDER BY account
+
+      # 面板 3: 预算明细 (余额 + 支出合并)
+      - title: "📋 预算执行明细"
+        width: half
+        sql: |
+          SELECT
+            account,
+            sum(position) as total
+          WHERE
+            account ~ 'Equity:Budget:'
+          GROUP BY account
+          ORDER BY account
+
+      # 面板 4: 本月各预算余额变动
+      - title: "📈 本月预算趋势"
+        width: full
+        type: bar
+        sql: |
+          SELECT
+            account,
+            sum(position) as amount
+          WHERE
+            account ~ 'Equity:Budget:Balance:'
+            AND account != 'Equity:Budget:Income:'
+            AND date >= DATE('start of this month', 'localtime')
+          GROUP BY account
+          ORDER BY account
+
+      # 面板 5: 未标记预算科目的实际支出（看看哪些开销没被预算覆盖）
+      - title: "⚠️ 未纳入预算的支出"
+        width: full
+        type: table
+        sql: |
+          SELECT
+            account,
+            sum(position) as total
+          WHERE
+            account ~ '^Expenses:'
+            AND account NOT IN (
+              SELECT DISTINCT account
+              WHERE account ~ '^Equity:Budget:'
+            )
+          GROUP BY account
+          HAVING total != 0
+          ORDER BY account
+
+  - name: "🔥 预算速查"
+    panels:
+      - title: "💰 余额速览"
+        width: half
+        sql: |
+          SELECT
+            account,
+            sum(position) as balance
+          WHERE
+            account ~ 'Equity:Budget:Balance:'
+            AND account NOT LIKE '%Income%'
+          GROUP BY account
+          ORDER BY balance
+
+      - title: "📊 本月已花预算占比"
+        width: half
+        type: bar
+        sql: |
+          SELECT
+            account,
+            -sum(position) as spent
+          WHERE
+            account ~ 'Equity:Budget:Expenses:'
+            AND date >= DATE('start of this month', 'localtime')
+          GROUP BY account
+          ORDER BY spent DESC

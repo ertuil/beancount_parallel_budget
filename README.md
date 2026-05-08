@@ -88,7 +88,42 @@ YYYY-MM-DD custom "parallel_budget" "<名称>" "<周期>" <金额> <币种>
 
 ### 查看预算状态
 
-使用 `bean-query` 查看 `Equity:Budget:Balance:{name}` 的余额：
+#### Fava Dashboard
+
+仓库附带了 Fava 仪表板配置 `dashboards.yaml`，包含预算余额、实际支出、执行明细等面板。
+
+![](docs/dashboard-preview.png)
+
+将 `dashboards.yaml` 的内容合并到你的 Fava dashboard 配置即可。
+
+#### CLI 报表
+
+仓库提供了一个独立报表脚本 `report.py`，无需 Fava 即可查看预算执行情况：
+
+```bash
+cd ~/parallel_budget
+PYTHONPATH=. python3 report.py examples/main.beancount
+```
+
+输出示例：
+
+```
+┌────────────────────────────────────────────────────────────┐
+│  📊  预算执行报告                                          │
+├───────────┬──────────┬──────────┬──────────┬───────┬───────┤
+│   类别    │   预算   │  已支出  │   余额   │ 使用率 │ 周期  │
+├───────────┼──────────┼──────────┼──────────┼───────┼───────┤
+│   Food    │   2,000  │     230  │   1,770  │ 11.5% │   月  │
+│ Renovation│  20,000  │     780  │  19,220  │  3.9% │  一次 │
+├───────────┼──────────┼──────────┼──────────┼───────┼───────┤
+│   合计    │  22,000  │   1,010  │  20,990  │  4.6% │       │
+└───────────┴──────────┴──────────┴──────────┴───────┴───────┘
+
+  💡 预算余额 = 周期初预算额 - 已累计支出（含跨周期累积）
+  📅 每周期初自动充值，过往周期余额不归零
+```
+
+#### bean-query
 
 ```bash
 bean-query main.beancount "SELECT date, account, position WHERE account ~ 'Equity:Budget:Balance'"
